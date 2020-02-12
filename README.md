@@ -14,8 +14,8 @@
 ## Prediction Example
 Fisrt column for true images, second column for true labels and third column for prediction results.
 
-1. ![example1](./prediction1.png)
-2. ![example2](./prediction2.png)
+![example1](./prediction1.png)
+![example2](./prediction2.png)
 
 ## Log File
 [log.txt](./log.txt)
