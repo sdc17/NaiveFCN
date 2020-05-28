@@ -13,8 +13,8 @@ import sys
 
 
 voc_root = "./data/voc2012/VOCtrainval_11-May-2012"
-mode_train = False
-mode_predict = True
+mode_train = True
+mode_predict = False
 
 
 def read_images(root=voc_root, train=True):
@@ -257,7 +257,7 @@ if mode_train:
         eval_mean_iu = 0
         eval_fwavacc = 0
         with torch.no_grad():
-            for data in valid_data:
+            for item in valid_data:
                 data = item[0].cuda()
                 label = item[1].cuda()
                 out = net(data)
@@ -270,7 +270,7 @@ if mode_train:
                 for lbt, lbp in zip(label_true, label_pred):
                     acc, acc_cls, mean_iu, fwavacc = label_accuracy_score(lbt, lbp, num_classes)
                     eval_acc += acc
-                    eval_acc_cls + acc_cls
+                    eval_acc_cls += acc_cls
                     eval_mean_iu += mean_iu
                     eval_fwavacc += fwavacc
 
@@ -300,9 +300,9 @@ if mode_predict:
         pred = out.max(dim=1)[1].squeeze().data.cpu().numpy()
         return cm[pred], cm[label.numpy()]
 
-    _, figs = plt.subplots(10, 3, figsize=(12, 8))
-    valid_bias = 0
-    for i in range(10):
+    _, figs = plt.subplots(3, 3, figsize=(12, 8))
+    valid_bias = 600
+    for i in range(3):
         predict_data, predict_label = valid[i + valid_bias]
         pred, label = predict(predict_data, predict_label)
         figs[i, 0].imshow(np.array(Image.open(valid.data_list[i + valid_bias])))
@@ -314,3 +314,5 @@ if mode_predict:
         figs[i, 2].imshow(pred)
         figs[i, 2].axes.get_xaxis().set_visible(False)
         figs[i, 2].axes.get_yaxis().set_visible(False)
+    
+    plt.show()
